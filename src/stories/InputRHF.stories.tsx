@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import type { ReactNode } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Input from "../components/Input/Input";
 
@@ -10,11 +11,31 @@ const meta: Meta<typeof Input> = {
   title: "Form/Input with React Hook Form",
   component: Input,
   tags: ["autodocs"],
+  parameters: {
+    layout: "centered",
+  },
 };
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
+
+function StoryContainer({ children }: { children: ReactNode }) {
+  return (
+    <div
+      style={{
+        maxWidth: 360,
+        margin: "2rem auto",
+        padding: "1rem",
+        borderRadius: 8,
+        border: "1px solid #e5e7eb",
+        backgroundColor: "#ffffff",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
 
 function ReactHookFormExample() {
   const { control, handleSubmit } = useForm<FormValues>({
@@ -22,7 +43,6 @@ function ReactHookFormExample() {
   });
 
   const onSubmit = (values: FormValues) => {
-    // Для демо в Storybook можна просто показати alert
     alert(JSON.stringify(values, null, 2));
   };
 
@@ -33,7 +53,6 @@ function ReactHookFormExample() {
         display: "flex",
         flexDirection: "column",
         gap: "0.75rem",
-        width: "320px",
       }}
     >
       <Controller
@@ -55,10 +74,11 @@ function ReactHookFormExample() {
       <button
         type="submit"
         style={{
-          padding: "8px 12px",
+          padding: "0.5rem 0.75rem",
           borderRadius: 6,
           border: "1px solid #d4d4d8",
           cursor: "pointer",
+          backgroundColor: "#e5e7eb",
         }}
       >
         Submit
@@ -67,7 +87,11 @@ function ReactHookFormExample() {
   );
 }
 
-export const BasicIntegration: Story = {
+export const EmailFieldWithValidation: Story = {
   name: "Email field with validation",
-  render: () => <ReactHookFormExample />,
+  render: () => (
+    <StoryContainer>
+      <ReactHookFormExample />
+    </StoryContainer>
+  ),
 };

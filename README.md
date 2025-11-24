@@ -51,6 +51,7 @@ src/
  SidebarMenu.css
  stories/
  Input.stories.tsx
+ InputRHF.stories.tsx
  Toast.stories.tsx
  SidebarMenu.stories.tsx
  index.ts
@@ -79,7 +80,7 @@ Configurable text input component with:
 - `label?: string`
 - `clearable?: boolean`
 - `error?: string`
-- ■■■■ ■■■■ ■■■■■■■■■■ `<input>` props
+- ` plus all other standard <input> props via ...rest`
 ### Behaviour
 - If `type="password"` – shows an eye icon button to toggle visibility.
 - If `clearable` and there is a value – shows a small `×` button to clear input.
@@ -194,3 +195,9 @@ This separation makes the library easy to understand, test and extend.
 ### Bonus: React Hook Form integration
 
 The story **“Form / Input with React Hook Form / Email field with validation”** shows how the `Input` component works as a controlled field inside `react-hook-form` using the `Controller` API and built-in validation.
+
+### Bonus features
+
+- Storybook Controls enabled for all components (Input, Toast, SidebarMenu).
+- Additional story demonstrating integration with **React Hook Form**.
+- `Toast` and `SidebarMenu` use **Framer Motion** for subtle slide/fade animations.
