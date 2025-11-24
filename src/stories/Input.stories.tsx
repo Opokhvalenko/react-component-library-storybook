@@ -56,13 +56,7 @@ export const Number: Story = {
     const [value, setValue] = useState("42");
     return (
       <div style={{ maxWidth: 320 }}>
-        <Input
-          {...args}
-          type="number"
-          label="Number input"
-          value={value}
-          onChange={setValue}
-        />
+        <Input {...args} type="number" label="Number input" value={value} onChange={setValue} />
       </div>
     );
   },
