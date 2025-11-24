@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { type ComponentProps, useState } from "react";
 import Toast from "../components/Toast/Toast";
 
-type ToastProps = ComponentProps<typeof Toast>;
+type ToastComponentProps = ComponentProps<typeof Toast>;
 
 const meta: Meta<typeof Toast> = {
   title: "Feedback/Toast",
@@ -10,6 +10,12 @@ const meta: Meta<typeof Toast> = {
   tags: ["autodocs"],
   args: {
     message: "Hello from toast!",
+    type: "info",
+    duration: 3000,
+    showCloseButton: true,
+  },
+  argTypes: {
+    onClose: { control: false },
   },
 };
 
@@ -21,25 +27,34 @@ export const Success: Story = {
   name: "Success",
   args: {
     type: "success",
-    duration: 2000,
+    message: "Profile saved successfully!",
   },
 };
 
-export const ErrorLongDuration: Story = {
-  name: "Error (long duration)",
+export const ErrorLong: Story = {
+  name: "Error (longer duration)",
   args: {
     type: "error",
+    message: "Something went wrong. Please try again.",
     duration: 6000,
-    message: "Something went wrong",
   },
 };
 
-function ToastPlaygroundComponent(args: ToastProps) {
+function ToastPlaygroundComponent(args: ToastComponentProps) {
   const [visible, setVisible] = useState(false);
 
   return (
-    <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-      <button type="button" onClick={() => setVisible(true)}>
+    <div style={{ padding: 24 }}>
+      <button
+        type="button"
+        style={{
+          padding: "8px 12px",
+          borderRadius: 6,
+          border: "1px solid #d4d4d8",
+          cursor: "pointer",
+        }}
+        onClick={() => setVisible(true)}
+      >
         Show toast
       </button>
 
@@ -48,7 +63,6 @@ function ToastPlaygroundComponent(args: ToastProps) {
           {...args}
           onClose={() => {
             setVisible(false);
-            args.onClose?.();
           }}
         />
       )}
@@ -58,10 +72,5 @@ function ToastPlaygroundComponent(args: ToastProps) {
 
 export const Playground: Story = {
   name: "Playground (manual trigger)",
-  args: {
-    type: "info",
-    duration: 3000,
-    message: "This toast is shown from a button",
-  },
   render: (args) => <ToastPlaygroundComponent {...args} />,
 };

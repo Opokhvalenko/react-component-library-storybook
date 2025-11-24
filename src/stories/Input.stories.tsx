@@ -2,53 +2,58 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { type ComponentProps, useState } from "react";
 import Input from "../components/Input/Input";
 
-type InputProps = ComponentProps<typeof Input>;
+type InputComponentProps = ComponentProps<typeof Input>;
 
 const meta: Meta<typeof Input> = {
   title: "Form/Input",
   component: Input,
   tags: ["autodocs"],
+  argTypes: {
+    value: { control: false },
+    onChange: { control: false },
+    type: {
+      control: "radio",
+      options: ["text", "password", "number", "email"],
+    },
+  },
+  args: {
+    label: "Label",
+    type: "text",
+    placeholder: "Enter some text...",
+    clearable: true,
+  },
 };
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-function TextInputStory(args: InputProps) {
-  const [value, setValue] = useState("John Doe");
-  return <Input {...args} value={value} onChange={setValue} />;
-}
+function ControlledInput(args: InputComponentProps) {
+  const [value, setValue] = useState(args.value ?? "");
 
-function PasswordInputStory(args: InputProps) {
-  const [value, setValue] = useState("Password123");
-  return <Input {...args} value={value} onChange={setValue} />;
-}
-
-function NumberInputStory(args: InputProps) {
-  const [value, setValue] = useState("42");
-  return <Input {...args} value={value} onChange={setValue} />;
+  return (
+    <Input
+      {...args}
+      value={value}
+      onChange={setValue}
+    />
+  );
 }
 
 export const Text: Story = {
-  name: "Text (clearable)",
-  args: {
-    label: "Name",
-    type: "text",
-    placeholder: "Enter your name",
-    clearable: true,
-  },
-  render: (args) => <TextInputStory {...args} />,
+  name: "Text",
+  render: (args) => <ControlledInput {...args} />,
 };
 
-export const PasswordWithToggle: Story = {
-  name: "Password with toggle",
+export const Password: Story = {
+  name: "Password with toggle & clear",
   args: {
     label: "Password",
     type: "password",
     placeholder: "Enter password",
     clearable: true,
   },
-  render: (args) => <PasswordInputStory {...args} />,
+  render: (args) => <ControlledInput {...args} />,
 };
 
 export const NumberInput: Story = {
@@ -59,5 +64,15 @@ export const NumberInput: Story = {
     placeholder: "Enter age",
     clearable: false,
   },
-  render: (args) => <NumberInputStory {...args} />,
+  render: (args) => <ControlledInput {...args} />,
+};
+
+export const WithError: Story = {
+  name: "With error message",
+  args: {
+    label: "Email",
+    type: "email",
+    placeholder: "Enter email",
+  },
+  render: (args) => <ControlledInput {...args} error="Required field" />,
 };
