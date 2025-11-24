@@ -1,63 +1,63 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
-import Input, { type InputProps } from "../components/Input/Input";
+import { type ComponentProps, useState } from "react";
+import Input from "../components/Input/Input";
+
+type InputProps = ComponentProps<typeof Input>;
 
 const meta: Meta<typeof Input> = {
   title: "Form/Input",
   component: Input,
+  tags: ["autodocs"],
 };
+
 export default meta;
 
-type Story = StoryObj<typeof Input>;
+type Story = StoryObj<typeof meta>;
 
-export const TextClearable: Story = {
+function TextInputStory(args: InputProps) {
+  const [value, setValue] = useState("John Doe");
+  return <Input {...args} value={value} onChange={setValue} />;
+}
+
+function PasswordInputStory(args: InputProps) {
+  const [value, setValue] = useState("Password123");
+  return <Input {...args} value={value} onChange={setValue} />;
+}
+
+function NumberInputStory(args: InputProps) {
+  const [value, setValue] = useState("42");
+  return <Input {...args} value={value} onChange={setValue} />;
+}
+
+export const Text: Story = {
   name: "Text (clearable)",
-  render: (args: InputProps) => {
-    const [value, setValue] = useState("Hello");
-    return (
-      <div style={{ maxWidth: 320 }}>
-        <Input
-          {...args}
-          type="text"
-          label="Text input"
-          value={value}
-          onChange={setValue}
-          clearable
-          placeholder="Type some text..."
-        />
-      </div>
-    );
+  args: {
+    label: "Name",
+    type: "text",
+    placeholder: "Enter your name",
+    clearable: true,
   },
+  render: (args) => <TextInputStory {...args} />,
 };
 
-export const PasswordToggle: Story = {
+export const PasswordWithToggle: Story = {
   name: "Password with toggle",
-  render: (args: InputProps) => {
-    const [value, setValue] = useState("");
-    return (
-      <div style={{ maxWidth: 320 }}>
-        <Input
-          {...args}
-          type="password"
-          label="Password"
-          value={value}
-          onChange={setValue}
-          clearable
-          placeholder="Enter password"
-        />
-      </div>
-    );
+  args: {
+    label: "Password",
+    type: "password",
+    placeholder: "Enter password",
+    clearable: true,
   },
+  render: (args) => <PasswordInputStory {...args} />,
 };
 
-export const Number: Story = {
+export const NumberInput: Story = {
   name: "Number",
-  render: (args: InputProps) => {
-    const [value, setValue] = useState("42");
-    return (
-      <div style={{ maxWidth: 320 }}>
-        <Input {...args} type="number" label="Number input" value={value} onChange={setValue} />
-      </div>
-    );
+  args: {
+    label: "Age",
+    type: "number",
+    placeholder: "Enter age",
+    clearable: false,
   },
+  render: (args) => <NumberInputStory {...args} />,
 };

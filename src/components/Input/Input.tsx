@@ -1,4 +1,4 @@
-import { forwardRef, useId, useState, type ChangeEvent, type InputHTMLAttributes } from "react";
+import { type ChangeEvent, forwardRef, type InputHTMLAttributes, useId, useState } from "react";
 import "./Input.css";
 
 export type InputType = "text" | "password" | "number" | "email";

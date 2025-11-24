@@ -1,56 +1,67 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
-import Toast, { type ToastProps } from "../components/Toast/Toast";
+import { type ComponentProps, useState } from "react";
+import Toast from "../components/Toast/Toast";
+
+type ToastProps = ComponentProps<typeof Toast>;
 
 const meta: Meta<typeof Toast> = {
   title: "Feedback/Toast",
   component: Toast,
+  tags: ["autodocs"],
+  args: {
+    message: "Hello from toast!",
+  },
 };
+
 export default meta;
 
-type Story = StoryObj<typeof Toast>;
+type Story = StoryObj<typeof meta>;
 
 export const Success: Story = {
+  name: "Success",
   args: {
-    message: "Profile saved successfully!",
     type: "success",
-    duration: 3000,
+    duration: 2000,
   },
 };
 
 export const ErrorLongDuration: Story = {
+  name: "Error (long duration)",
   args: {
-    message: "Something went wrong. Please try again.",
     type: "error",
     duration: 6000,
+    message: "Something went wrong",
   },
 };
 
+function ToastPlaygroundComponent(args: ToastProps) {
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+      <button type="button" onClick={() => setVisible(true)}>
+        Show toast
+      </button>
+
+      {visible && (
+        <Toast
+          {...args}
+          onClose={() => {
+            setVisible(false);
+            args.onClose?.();
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
 export const Playground: Story = {
   name: "Playground (manual trigger)",
-  render: (args: ToastProps) => {
-    const [visible, setVisible] = useState(false);
-
-    return (
-      <>
-        <button type="button" onClick={() => setVisible(true)}>
-          Show toast
-        </button>
-        {visible && (
-          <Toast
-            {...args}
-            message={args.message ?? "Settings updated!"}
-            type={args.type ?? "info"}
-            duration={args.duration ?? 4000}
-            onClose={() => setVisible(false)}
-          />
-        )}
-      </>
-    );
-  },
   args: {
-    message: "Settings updated!",
     type: "info",
-    duration: 4000,
+    duration: 3000,
+    message: "This toast is shown from a button",
   },
+  render: (args) => <ToastPlaygroundComponent {...args} />,
 };
