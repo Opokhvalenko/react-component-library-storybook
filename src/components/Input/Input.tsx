@@ -14,6 +14,41 @@ export interface InputProps extends InputBaseProps {
   error?: string;
 }
 
+interface PasswordToggleButtonProps {
+  isVisible: boolean;
+  onToggle: () => void;
+}
+
+function PasswordToggleButton({ isVisible, onToggle }: PasswordToggleButtonProps) {
+  return (
+    <button
+      type="button"
+      className="input-icon-button"
+      aria-label={isVisible ? "Hide password" : "Show password"}
+      onClick={onToggle}
+    >
+      {isVisible ? "🙈" : "👁"}
+    </button>
+  );
+}
+
+interface ClearButtonProps {
+  onClear: () => void;
+}
+
+function ClearButton({ onClear }: ClearButtonProps) {
+  return (
+    <button
+      type="button"
+      className="input-icon-button input-icon-button--clear"
+      aria-label="Clear input"
+      onClick={onClear}
+    >
+      ×
+    </button>
+  );
+}
+
 /**
  * Smart Input:
  * - supports multiple types (text/password/number/email)
@@ -60,26 +95,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         />
 
         {showPasswordToggle && (
-          <button
-            type="button"
-            className="input-icon-button"
-            aria-label={isPasswordVisible ? "Hide password" : "Show password"}
-            onClick={() => setIsPasswordVisible((prev) => !prev)}
-          >
-            {isPasswordVisible ? "🙈" : "👁"}
-          </button>
+          <PasswordToggleButton
+            isVisible={isPasswordVisible}
+            onToggle={() => setIsPasswordVisible((prev) => !prev)}
+          />
         )}
 
-        {showClear && (
-          <button
-            type="button"
-            className="input-icon-button input-icon-button--clear"
-            aria-label="Clear input"
-            onClick={handleClear}
-          >
-            ×
-          </button>
-        )}
+        {showClear && <ClearButton onClear={handleClear} />}
       </div>
 
       {error && <p className="input-error">{error}</p>}
