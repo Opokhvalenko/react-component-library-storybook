@@ -1,76 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
 import "./SidebarMenu.css";
-
-export interface SidebarMenuItem {
-  id: string;
-  label: string;
-  children?: SidebarMenuItem[];
-  onClick?: () => void;
-}
-
-export interface SidebarMenuProps {
-  isOpen: boolean;
-  onClose: () => void;
-  items: SidebarMenuItem[];
-  title?: string;
-}
-
-interface SidebarListProps {
-  items: SidebarMenuItem[];
-  openItemIds: string[];
-  onToggle: (id: string) => void;
-}
-
-function SidebarList({ items, openItemIds, onToggle }: SidebarListProps) {
-  return (
-    <ul className="sidebar-list">
-      {items.map((item) => {
-        const hasChildren = item.children && item.children.length > 0;
-        const isOpen = openItemIds.includes(item.id);
-
-        const handleClick = () => {
-          if (hasChildren) {
-            onToggle(item.id);
-          } else if (item.onClick) {
-            item.onClick();
-          }
-        };
-
-        return (
-          <li key={item.id} className="sidebar-item">
-            <button
-              type="button"
-              className="sidebar-item-button"
-              onClick={handleClick}
-            >
-              <span className="sidebar-item-label">{item.label}</span>
-
-              {hasChildren && (
-                <span
-                  className={`sidebar-chevron${
-                    isOpen ? " sidebar-chevron--open" : ""
-                  }`}
-                  aria-hidden="true"
-                >
-                  {isOpen ? "▾" : "▸"}
-                </span>
-              )}
-            </button>
-
-            {hasChildren && isOpen && item.children && (
-              <SidebarList
-                items={item.children}
-                openItemIds={openItemIds}
-                onToggle={onToggle}
-              />
-            )}
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
+import type { SidebarMenuProps } from "./SidebarMenu.types";
+import { SidebarMenuList } from "./SidebarMenuList";
+import { useSidebarOpenItems } from "./useSidebarOpenItems";
 
 /**
  * SidebarMenu:
@@ -78,34 +10,18 @@ function SidebarList({ items, openItemIds, onToggle }: SidebarListProps) {
  * - renders nested items (accordion-style)
  * - closes when backdrop or close button are clicked
  */
-export default function SidebarMenu({
-  isOpen,
-  onClose,
-  items,
-  title = "Menu",
-}: SidebarMenuProps) {
-  const [openItemIds, setOpenItemIds] = useState<string[]>([]);
-
-  const handleToggleItem = (id: string) => {
-    setOpenItemIds((prev) =>
-      prev.includes(id) ? prev.filter((openId) => openId !== id) : [...prev, id],
-    );
-  };
+export default function SidebarMenu({ isOpen, onClose, items, title = "Menu" }: SidebarMenuProps) {
+  const { openItemIds, toggleItem, reset } = useSidebarOpenItems();
 
   const handleClose = () => {
-    setOpenItemIds([]);
+    reset();
     onClose();
   };
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div
-          className="sidebar-overlay"
-          aria-modal="true"
-          role="dialog"
-          aria-label={title}
-        >
+        <div className="sidebar-overlay" aria-modal="true" role="dialog" aria-label={title}>
           <button
             type="button"
             className="sidebar-backdrop"
@@ -134,11 +50,7 @@ export default function SidebarMenu({
             </div>
 
             <nav className="sidebar-nav" aria-label={title}>
-              <SidebarList
-                items={items}
-                openItemIds={openItemIds}
-                onToggle={handleToggleItem}
-              />
+              <SidebarMenuList items={items} openItemIds={openItemIds} onToggle={toggleItem} />
             </nav>
           </motion.aside>
         </div>
@@ -146,3 +58,5 @@ export default function SidebarMenu({
     </AnimatePresence>
   );
 }
+
+export type { SidebarMenuItem, SidebarMenuProps } from "./SidebarMenu.types";

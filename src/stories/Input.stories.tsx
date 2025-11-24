@@ -51,13 +51,7 @@ function StoryContainer({ children }: { children: ReactNode }) {
 function ControlledInput(args: InputComponentProps) {
   const [value, setValue] = useState(args.value ?? "");
 
-  return (
-    <Input
-      {...args}
-      value={value}
-      onChange={setValue}
-    />
-  );
+  return <Input {...args} value={value} onChange={setValue} />;
 }
 
 export const Text: Story = {
@@ -108,10 +102,7 @@ export const WithError: Story = {
   },
   render: (args) => (
     <StoryContainer>
-      <ControlledInput
-        {...args}
-        error="Required field"
-      />
+      <ControlledInput {...args} error="Required field" />
     </StoryContainer>
   ),
 };

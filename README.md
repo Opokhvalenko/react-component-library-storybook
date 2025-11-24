@@ -14,7 +14,9 @@ behaviour.
 - **Vite** – dev server & build
 - **Storybook 10** with Vite builder
 - **ESLint + Prettier** – code quality & formatting
-- **Vitest + Playwright** – via Storybook addon (for visual/interaction tests)
+- **Biome** – additional static analysis
+- **Vitest** (+ browser runner) – tests for stories and components
+- **Framer Motion** – small slide / fade animations
 ---
 ## Getting started
 Install dependencies:
@@ -26,38 +28,64 @@ Run Storybook:
 npm run storybook
 ```
 Storybook will be available at: **http://localhost:6006**
-Other useful scripts:
+
+Run the Vite dev shell (simple app that just points to Storybook):
+
 ```bash
 npm run dev # Vite dev server
+```
+Production builds:
+
+```bash
 npm run build # Production build
-npm run build-storybook
+npm run build-storybook # Storybook static build to storybook-static/
+```
+
+Formatting & linting:
+
+```bash
 npm run lint # ESLint
 npm run format # Prettier format
 npm run format:check # Prettier check
+npm run lint:biome    # Biome checks
+```
+
+Tests:
+
+```bash
+npm run test           # Vitest (storybook-based tests)
+npm run test:coverage  # Vitest with coverage report
+npm run typecheck      # TypeScript project type checking
+npm run check          # full pipeline: lint + biome + typecheck + tests + builds
 ```
 ---
 ## Project structure
 ```text
 src/
  components/
- Input/
- Input.tsx
- Input.css
- Toast/
- Toast.tsx
- Toast.css
- SidebarMenu/
- SidebarMenu.tsx
- SidebarMenu.css
+  Input/
+   Input.tsx
+   Input.css
+  Toast/
+   Toast.tsx
+   Toast.css
+   useAutoDismiss.ts
+  SidebarMenu/
+   SidebarMenu.tsx
+   SidebarMenu.css
+   SidebarMenuList.tsx
+   SidebarMenu.types.ts
+   useSidebarOpenItems.ts
  stories/
- Input.stories.tsx
- InputRHF.stories.tsx
- Toast.stories.tsx
- SidebarMenu.stories.tsx
+  Input.stories.tsx
+  InputRHF.stories.tsx
+  Toast.stories.tsx
+  SidebarMenu.stories.tsx
  index.ts
 ```
-- `components/*` – UI components + styles
+- `components/*` – UI components + styles and small hooks
 - `stories/*` – Storybook stories that document and showcase different states
+
 All public exports go through `src/index.ts`:
 ```ts
 export { default as Input } from "./components/Input/Input";
@@ -80,7 +108,7 @@ Configurable text input component with:
 - `label?: string`
 - `clearable?: boolean`
 - `error?: string`
-- ` plus all other standard <input> props via ...rest`
+- ` ...rest – all other standard <input> props`
 ### Behaviour
 - If `type="password"` – shows an eye icon button to toggle visibility.
 - If `clearable` and there is a value – shows a small `×` button to clear input.
@@ -91,6 +119,8 @@ Stories:
 - **Text (clearable)** – text input with clear button
 - **Password with toggle** – password input with visibility toggle
 - **Number** – numeric input
+- **With error** – input in an error state
+
 ---
 ## Toast
 ### Responsibility
@@ -187,12 +217,28 @@ assignment:
 
 ---
 ## Notes on Single Responsibility
-Each component focuses on a single responsibility:
-- `Input` – controlled text input with small UX helpers (toggle + clear).
-- `Toast` – showing and dismissing notifications.
-- `SidebarMenu` – managing open/close state of a sliding menu and nested items.
-Stories are responsible only for documentation and examples, not for component logic.
-This separation makes the library easy to understand, test and extend.
+Each piece of the library focuses on a single responsibility:
+
+- `Input` – controlled text input; small icon subcomponents handle password visibility and clear actions.
+- `Toast` – presentational wrapper for a single notification, while `useAutoDismiss` owns the auto-dismiss lifecycle.
+- `SidebarMenu` – shell component for overlay and animation; `SidebarMenuList` renders the nested tree; `useSidebarOpenItems` manages which items are expanded.
+
+Storybook stories are responsible only for documentation and interactive examples, not for the core component logic. This separation makes the library easy to understand, test and extend.
+
+## Quality checks
+
+This component library has a small but solid quality gate:
+
+- `npm run lint` – ESLint (TypeScript + React + Storybook rules).
+- `npm run lint:biome` – additional static analysis via Biome.
+- `npm run typecheck` – TypeScript project references build without emitting JS.
+- `npm run test` – Vitest tests (including Storybook stories via the Storybook test runner).
+- `npm run test:coverage` – runs tests with coverage report.
+- `npm run build` – Vite production build for the demo shell.
+- `npm run build-storybook` – builds the Storybook instance to `storybook-static`.
+- `npm run check` – runs all of the above in sequence.
+
+Before pushing a branch I usually run `npm run check` to ensure linting, type safety, tests and builds all pass.
 
 ### Bonus: React Hook Form integration
 

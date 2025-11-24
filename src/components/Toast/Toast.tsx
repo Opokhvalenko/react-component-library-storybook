@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import "./Toast.css";
+import { useAutoDismiss } from "./useAutoDismiss";
 
 export type ToastType = "success" | "error" | "info" | "warning";
 
@@ -30,16 +31,12 @@ const Toast = ({
 }: ToastProps) => {
   const [visible, setVisible] = useState(true);
 
-  useEffect(() => {
-    if (!duration) return;
+  const handleDismiss = useCallback(() => {
+    setVisible(false);
+    onClose?.();
+  }, [onClose]);
 
-    const id = window.setTimeout(() => {
-      setVisible(false);
-      onClose?.();
-    }, duration);
-
-    return () => window.clearTimeout(id);
-  }, [duration, onClose]);
+  useAutoDismiss(duration, handleDismiss);
 
   if (!visible) return null;
 
@@ -60,10 +57,7 @@ const Toast = ({
           type="button"
           className="toast-close"
           aria-label="Close notification"
-          onClick={() => {
-            setVisible(false);
-            onClose?.();
-          }}
+          onClick={handleDismiss}
         >
           ×
         </button>
