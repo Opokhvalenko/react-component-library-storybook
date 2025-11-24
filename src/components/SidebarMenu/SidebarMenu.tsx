@@ -25,17 +25,32 @@ const SidebarMenu = ({ isOpen, onClose, items, title = "Menu" }: SidebarMenuProp
   const [openItemIds, setOpenItemIds] = useState<string[]>([]);
 
   const toggleItem = (id: string) => {
-    setOpenItemIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+    setOpenItemIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    );
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="sidebar-overlay" onClick={onClose}>
-      <aside className="sidebar-panel" onClick={(event) => event.stopPropagation()}>
+    <div className="sidebar-overlay">
+      {/* Семантичний backdrop-кнопка поверх фону */}
+      <button
+        type="button"
+        className="sidebar-backdrop"
+        aria-label="Close sidebar"
+        onClick={onClose}
+      />
+
+      <aside className="sidebar-panel">
         <header className="sidebar-header">
           <h2 className="sidebar-title">{title}</h2>
-          <button type="button" className="sidebar-close" aria-label="Close menu" onClick={onClose}>
+          <button
+            type="button"
+            className="sidebar-close"
+            aria-label="Close menu"
+            onClick={onClose}
+          >
             ×
           </button>
         </header>
@@ -60,6 +75,7 @@ const SidebarList = ({ items, openItemIds, onToggle }: SidebarListProps) => {
       {items.map((item) => {
         const hasChildren = !!item.children?.length;
         const isOpen = openItemIds.includes(item.id);
+        const childItems = item.children ?? [];
 
         return (
           <li key={item.id} className="sidebar-item">
@@ -78,7 +94,9 @@ const SidebarList = ({ items, openItemIds, onToggle }: SidebarListProps) => {
               <span>{item.label}</span>
               {hasChildren && (
                 <span
-                  className={`sidebar-chevron ${isOpen ? "sidebar-chevron--open" : ""}`}
+                  className={`sidebar-chevron ${
+                    isOpen ? "sidebar-chevron--open" : ""
+                  }`}
                   aria-hidden="true"
                 >
                   ▸
@@ -87,7 +105,7 @@ const SidebarList = ({ items, openItemIds, onToggle }: SidebarListProps) => {
             </button>
 
             {hasChildren && isOpen && (
-              <SidebarList items={item.children!} openItemIds={openItemIds} onToggle={onToggle} />
+              <SidebarList items={childItems} openItemIds={openItemIds} onToggle={onToggle} />
             )}
           </li>
         );

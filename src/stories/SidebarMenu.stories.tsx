@@ -1,81 +1,80 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
-import SidebarMenu, {
-  type SidebarMenuItem,
-  type SidebarMenuProps,
-} from "../components/SidebarMenu/SidebarMenu";
+import type { ComponentProps } from "react";
+import SidebarMenu from "../components/SidebarMenu/SidebarMenu";
+
+type SidebarMenuProps = ComponentProps<typeof SidebarMenu>;
+
+const oneLevelItems: SidebarMenuProps["items"] = [
+  { id: "home", label: "Home" },
+  { id: "profile", label: "Profile" },
+  { id: "settings", label: "Settings" },
+];
+
+const twoLevelItems: SidebarMenuProps["items"] = [
+  {
+    id: "dashboard",
+    label: "Dashboard",
+  },
+  {
+    id: "projects",
+    label: "Projects",
+    children: [
+      { id: "active-projects", label: "Active projects" },
+      { id: "archived-projects", label: "Archived projects" },
+    ],
+  },
+  {
+    id: "account",
+    label: "Account",
+    children: [
+      { id: "billing", label: "Billing" },
+      { id: "security", label: "Security" },
+    ],
+  },
+];
 
 const meta: Meta<typeof SidebarMenu> = {
   title: "Navigation/SidebarMenu",
   component: SidebarMenu,
+  tags: ["autodocs"],
+  args: {
+    title: "Menu",
+  },
 };
+
 export default meta;
 
-type Story = StoryObj<typeof SidebarMenu>;
+type Story = StoryObj<typeof meta>;
 
-const oneLevelItems: SidebarMenuItem[] = [
-  { id: "home", label: "Home" },
-  { id: "dashboard", label: "Dashboard" },
-  { id: "settings", label: "Settings" },
-];
-
-const twoLevelItems: SidebarMenuItem[] = [
-  {
-    id: "analytics",
-    label: "Analytics",
-    children: [
-      { id: "overview", label: "Overview" },
-      { id: "reports", label: "Reports" },
-    ],
-  },
-  {
-    id: "settings",
-    label: "Settings",
-    children: [
-      { id: "profile", label: "Profile" },
-      { id: "billing", label: "Billing" },
-    ],
-  },
-];
-
-export const OneLevel: Story = {
-  name: "One-level menu (open)",
-  render: (args: SidebarMenuProps) => {
-    const [open, setOpen] = useState(true);
-    return (
-      <>
-        <button type="button" onClick={() => setOpen(true)}>
-          Open menu
-        </button>
-        <SidebarMenu
-          {...args}
-          isOpen={open}
-          onClose={() => setOpen(false)}
-          items={oneLevelItems}
-          title="Main navigation"
-        />
-      </>
-    );
+export const OneLevelOpen: Story = {
+  name: "One-level (open)",
+  args: {
+    isOpen: true,
+    items: oneLevelItems,
+    onClose: () => {
+      // noop for Storybook canvas
+    },
   },
 };
 
-export const TwoLevels: Story = {
-  name: "Two-level nested menu",
-  render: (args: SidebarMenuProps) => {
-    const [open, setOpen] = useState(true);
-    return (
-      <>
-        <button type="button" onClick={() => setOpen(true)}>
-          Open menu
-        </button>
-        <SidebarMenu
-          {...args}
-          isOpen={open}
-          onClose={() => setOpen(false)}
-          items={twoLevelItems}
-          title="Project"
-        />
-      </>
-    );
+export const TwoLevelOpen: Story = {
+  name: "Two-level nested (open)",
+  args: {
+    isOpen: true,
+    items: twoLevelItems,
+    onClose: () => {
+      // noop for Storybook canvas
+    },
+  },
+};
+
+export const Closed: Story = {
+  name: "Closed state",
+  args: {
+    isOpen: false,
+    items: twoLevelItems,
+    onClose: () => {
+      // noop
+    },
   },
 };
