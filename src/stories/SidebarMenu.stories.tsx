@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import type { ComponentProps } from "react";
+import { type ComponentProps, useState } from "react";
 import SidebarMenu from "../components/SidebarMenu/SidebarMenu";
 
 type SidebarMenuProps = ComponentProps<typeof SidebarMenu>;
@@ -14,13 +14,9 @@ const twoLevelItems: SidebarMenuProps["items"] = [
   {
     id: "dashboard",
     label: "Dashboard",
-  },
-  {
-    id: "projects",
-    label: "Projects",
     children: [
-      { id: "active-projects", label: "Active projects" },
-      { id: "archived-projects", label: "Archived projects" },
+      { id: "analytics", label: "Analytics" },
+      { id: "reports", label: "Reports" },
     ],
   },
   {
@@ -37,8 +33,9 @@ const meta: Meta<typeof SidebarMenu> = {
   title: "Navigation/SidebarMenu",
   component: SidebarMenu,
   tags: ["autodocs"],
-  args: {
-    title: "Menu",
+  argTypes: {
+    items: { control: false },
+    onClose: { control: false },
   },
 };
 
@@ -46,26 +43,42 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const OneLevelOpen: Story = {
-  name: "One-level (open)",
-  args: {
-    isOpen: true,
-    items: oneLevelItems,
-    onClose: () => {
-      // noop for Storybook canvas
-    },
-  },
+function SidebarPlayground(props: { items: SidebarMenuProps["items"] }) {
+  const [isOpen, setIsOpen] = useState(true);
+
+  return (
+    <div style={{ minHeight: 300 }}>
+      <button
+        type="button"
+        style={{
+          padding: "8px 12px",
+          borderRadius: 6,
+          border: "1px solid #d4d4d8",
+          cursor: "pointer",
+        }}
+        onClick={() => setIsOpen(true)}
+      >
+        Open sidebar
+      </button>
+
+      <SidebarMenu
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        items={props.items}
+        title="Navigation"
+      />
+    </div>
+  );
+}
+
+export const OneLevel: Story = {
+  name: "One-level items",
+  render: () => <SidebarPlayground items={oneLevelItems} />,
 };
 
-export const TwoLevelOpen: Story = {
-  name: "Two-level nested (open)",
-  args: {
-    isOpen: true,
-    items: twoLevelItems,
-    onClose: () => {
-      // noop for Storybook canvas
-    },
-  },
+export const TwoLevels: Story = {
+  name: "Two-level nested items",
+  render: () => <SidebarPlayground items={twoLevelItems} />,
 };
 
 export const Closed: Story = {
@@ -73,8 +86,12 @@ export const Closed: Story = {
   args: {
     isOpen: false,
     items: twoLevelItems,
-    onClose: () => {
-      // noop
-    },
+    onClose: () => {},
+    title: "Navigation",
   },
+  render: (args) => (
+    <div style={{ minHeight: 300 }}>
+      <SidebarMenu {...args} />
+    </div>
+  ),
 };
