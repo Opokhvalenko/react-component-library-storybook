@@ -1,18 +1,9 @@
-import {
-  forwardRef,
-  useId,
-  useState,
-  type ChangeEvent,
-  type InputHTMLAttributes,
-} from "react";
+import { forwardRef, useId, useState, type ChangeEvent, type InputHTMLAttributes } from "react";
 import "./Input.css";
 
 export type InputType = "text" | "password" | "number" | "email";
 
-type InputBaseProps = Omit<
-  InputHTMLAttributes<HTMLInputElement>,
-  "type" | "value" | "onChange"
->;
+type InputBaseProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "value" | "onChange">;
 
 export interface InputProps extends InputBaseProps {
   label?: string;
@@ -47,8 +38,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     onChange("");
   };
 
-  const effectiveType =
-    type === "password" ? (isPasswordVisible ? "text" : "password") : type;
+  const effectiveType = type === "password" ? (isPasswordVisible ? "text" : "password") : type;
 
   return (
     <div className="input-root">

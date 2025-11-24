@@ -25,37 +25,23 @@ const SidebarMenu = ({ isOpen, onClose, items, title = "Menu" }: SidebarMenuProp
   const [openItemIds, setOpenItemIds] = useState<string[]>([]);
 
   const toggleItem = (id: string) => {
-    setOpenItemIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
-    );
+    setOpenItemIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   };
 
   if (!isOpen) return null;
 
   return (
     <div className="sidebar-overlay" onClick={onClose}>
-      <aside
-        className="sidebar-panel"
-        onClick={(event) => event.stopPropagation()}
-      >
+      <aside className="sidebar-panel" onClick={(event) => event.stopPropagation()}>
         <header className="sidebar-header">
           <h2 className="sidebar-title">{title}</h2>
-          <button
-            type="button"
-            className="sidebar-close"
-            aria-label="Close menu"
-            onClick={onClose}
-          >
+          <button type="button" className="sidebar-close" aria-label="Close menu" onClick={onClose}>
             ×
           </button>
         </header>
 
         <nav className="sidebar-nav">
-          <SidebarList
-            items={items}
-            openItemIds={openItemIds}
-            onToggle={toggleItem}
-          />
+          <SidebarList items={items} openItemIds={openItemIds} onToggle={toggleItem} />
         </nav>
       </aside>
     </div>
@@ -92,9 +78,7 @@ const SidebarList = ({ items, openItemIds, onToggle }: SidebarListProps) => {
               <span>{item.label}</span>
               {hasChildren && (
                 <span
-                  className={`sidebar-chevron ${
-                    isOpen ? "sidebar-chevron--open" : ""
-                  }`}
+                  className={`sidebar-chevron ${isOpen ? "sidebar-chevron--open" : ""}`}
                   aria-hidden="true"
                 >
                   ▸
@@ -103,11 +87,7 @@ const SidebarList = ({ items, openItemIds, onToggle }: SidebarListProps) => {
             </button>
 
             {hasChildren && isOpen && (
-              <SidebarList
-                items={item.children!}
-                openItemIds={openItemIds}
-                onToggle={onToggle}
-              />
+              <SidebarList items={item.children!} openItemIds={openItemIds} onToggle={onToggle} />
             )}
           </li>
         );

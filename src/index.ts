@@ -5,7 +5,4 @@ export { default as Toast } from "./components/Toast/Toast";
 export type { ToastProps, ToastType } from "./components/Toast/Toast";
 
 export { default as SidebarMenu } from "./components/SidebarMenu/SidebarMenu";
-export type {
-  SidebarMenuProps,
-  SidebarMenuItem,
-} from "./components/SidebarMenu/SidebarMenu";
+export type { SidebarMenuProps, SidebarMenuItem } from "./components/SidebarMenu/SidebarMenu";
