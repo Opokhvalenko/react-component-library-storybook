@@ -190,3 +190,7 @@ Each component focuses on a single responsibility:
 - `SidebarMenu` – managing open/close state of a sliding menu and nested items.
 Stories are responsible only for documentation and examples, not for component logic.
 This separation makes the library easy to understand, test and extend.
+
+### Bonus: React Hook Form integration
+
+The story **“Form / Input with React Hook Form / Email field with validation”** shows how the `Input` component works as a controlled field inside `react-hook-form` using the `Controller` API and built-in validation.
