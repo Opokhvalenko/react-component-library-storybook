@@ -153,12 +153,13 @@ Each story shows different prop configurations and component states to make it e
 behaviour without touching the code.
 ---
 ## Screenshots
+
 Screenshots are stored in the `screenshots/` folder and show the requested states from the
 assignment:
-- Input component
-- Toast component
-- Sidebar menu
-- Storybook UI
+- Input component in different states
+- Toast component variants (including error state)
+- Sidebar menu (one-level and two-level)
+- The components rendered inside the Storybook UI
 
 ### Input component
 
@@ -172,10 +173,6 @@ assignment:
 
 ![Sidebar states](./screenshots/sidebar-states.png)
 
-### Storybook UI
-
-![Storybook overview](./screenshots/storybook-overview-button.png)
-
 ### Toast (error state)
 
 ![Toast error](./screenshots/toast-variants-error.png)
@@ -183,6 +180,11 @@ assignment:
 ### Sidebar menu (two-level)
 
 ![Sidebar two-level](./screenshots/sidebar-two-level.png)
+
+### Input with React Hook Form
+
+![Input + React Hook Form](./screenshots/input-rhf-email-validation.png)
+
 ---
 ## Notes on Single Responsibility
 Each component focuses on a single responsibility:
